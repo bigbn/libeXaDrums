@@ -34,7 +34,7 @@ lib_LTLIBRARIES = libexadrums.la
 
 libexadrums_la_CXXFLAGS = $(AM_CXXFLAGS) \
   -pthread \
-  -std=c++17 $(alsa_CFLAGS) $(tinyxml2_CFLAGS)
+  -std=c++17 $(alsa_CFLAGS) $(tinyxml2_CFLAGS) -lsystemd
 libexadrums_la_LDFLAGS = $(AM_LDFLAGS) \
   -pthread \
   -version-info $(exadrums_libtool_version_info)

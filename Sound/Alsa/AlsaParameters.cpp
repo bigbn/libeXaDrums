@@ -12,6 +12,7 @@
 #include <tinyxml2.h>
 
 #include <iostream>
+#include <systemd/sd-journal.h>
 
 using namespace tinyxml2;
 using namespace Util;
@@ -23,11 +24,15 @@ namespace Sound
 	{
 
 		XMLDocument doc;
+		sd_journal_print(LOG_NOTICE, "Loading...");
 
 		if(doc.LoadFile(filePath.c_str()) != XML_SUCCESS)
 		{
+			sd_journal_print(LOG_NOTICE, "Not loaded");
 			throw Exception("Could not load sound card parameters.", error_type_error);
 		}
+
+		sd_journal_print(LOG_NOTICE, "Loaded");
 
 		XMLElement* root = doc.RootElement();
 

@@ -14,6 +14,7 @@
 #include "../Sound/Alsa/AlsaParameters.h"
 #include "../Sound/Mixer/Mixer.h"
 #include "../Util/Enums.h"
+#include <systemd/sd-journal.h>
 
 #include <vector>
 #include <algorithm>
@@ -44,19 +45,24 @@ namespace eXaDrumsApi
             this->dataLocation = std::string{dataLoc} + "/";
 
             // Load alsa parameters
+						sd_journal_print(LOG_NOTICE, "Load alsa parameters");
+
             AlsaParams alsaParams;
             AlsaParameters::LoadAlsaParameters(dataLocation + alsaConfigFile, alsaParams);
 
             // Create mixer and alsa
+						sd_journal_print(LOG_NOTICE, "Create mixer and alsa");
             this->mixer = std::make_shared<Mixer>();
             this->alsa = std::make_unique<Alsa>(alsaParams, this->mixer);
 
             // Load metronome parameters
+						sd_journal_print(LOG_NOTICE, "Load metronome parameters");
             MetronomeParameters metronomeParams;
             Metronome::LoadConfig(dataLocation + metronomeConfigFile, metronomeParams);
             this->metronome = std::make_shared<Metronome>(alsaParams, metronomeParams);
 
             // Create drum module
+						sd_journal_print(LOG_NOTICE, "Create drum module");
             this->drumModule = std::make_unique<Module>(dataLocation, alsaParams, this->mixer, this->metronome);
 		});
 
@@ -72,22 +78,27 @@ namespace eXaDrumsApi
 
 	error eXaDrums::Start_()
 	{
+		sd_journal_print(LOG_NOTICE, "Starting...");
 
 		try
-		{
+		{					
 			this->alsa->Start();
 			this->drumModule->Start();
 		}
 		catch(const Exception&)
 		{
+			sd_journal_print(LOG_NOTICE, "Got exception...");
 			return ExceptionToError([&] { throw; });
 		}
 		catch(...)
 		{
+			sd_journal_print(LOG_NOTICE, "Got exception again...");
 			return make_error("Could not start module.", error_type_error);
 		}
 		
-		isStarted.store(true);
+		sd_journal_print(LOG_NOTICE, "No issues...");
+		
+		isStarted.store(true);		
 		return make_error("", error_type_success);
 	}
 
