@@ -76,10 +76,14 @@ namespace eXaDrumsApi
 
 	// Module
 
-	error eXaDrums::Start_()
+	error eXaDrums::Start_(void* func)
 	{
-		sd_journal_print(LOG_NOTICE, "Starting...");
+		sd_journal_print(LOG_NOTICE, "Starting...");	
+		void (*mCallbackFunc)(void);
 
+    mCallbackFunc = (void(*)())func;
+    mCallbackFunc();
+		
 		try
 		{					
 			this->alsa->Start();

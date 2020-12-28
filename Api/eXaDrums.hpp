@@ -15,9 +15,9 @@
 namespace eXaDrumsApi
 {
 
-	inline void eXaDrums::Start()
+	inline void eXaDrums::Start(void* func)
 	{
-		Util::ErrorToException([&] { return this->Start_(); });
+		Util::ErrorToException([&] { return this->Start_(func); });
 	}
 
 	inline void eXaDrums::Stop()

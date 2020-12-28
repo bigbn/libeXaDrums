@@ -289,7 +289,7 @@ namespace eXaDrumsApi
 
 		if(isRestart)
 		{
-			ErrorToException([&] { return drumKit.Start_(); });
+		//	ErrorToException([&] { return drumKit.Start_(); });
 		}
 
 		return;
