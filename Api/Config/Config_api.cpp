@@ -287,10 +287,10 @@ namespace eXaDrumsApi
 
 		module.SelectKit(kitId);
 
-		if(isRestart)
-		{
-			ErrorToException([&] { return drumKit.Start_(); });
-		}
+		// if(isRestart)
+//		{
+			//ErrorToException([&] { return drumKit.Start_(); });
+//		}
 
 		return;
 	}

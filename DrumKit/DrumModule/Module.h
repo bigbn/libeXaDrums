@@ -14,7 +14,7 @@
 #include "../../Sound/Alsa/AlsaParams.h"
 #include "../../Sound/SoundBank/SoundBank.h"
 #include "../../Util/SimpleSafeQueue.h"
-
+#include "../../Util/Misc.h"
 #include "../Kits/Kit.h"
 
 #include "Recorder.h"
@@ -63,7 +63,7 @@ namespace DrumKit
 		int GetLastTrigValue() const noexcept { return lastTrigValue.load(std::memory_order_acquire); }
 
 		// Module
-		void Start();
+		void Start(Util::RuntimeEventsCallback callback);
 		void Stop();
 		void EnableRecording(bool record);
 		void RecorderExport(const std::string& fileName);
@@ -85,7 +85,7 @@ namespace DrumKit
 
 		void LoadKits();
 		void LoadTriggers();
-		void Run();
+		void Run(Util::RuntimeEventsCallback callback);
 		void CreateTriggers(const std::vector<TriggerParameters>& trigParams);
 		bool IsMetronomeEnabled() const;
 

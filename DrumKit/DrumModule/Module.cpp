@@ -11,7 +11,7 @@
 #include "../../IO/Spi.h"
 #include "../../Util/ErrorHandling.h"
 #include "../../Util/Threading.h"
-
+#include "../../Util/Misc.h"
 #include "../Triggers/TriggerManager.h"
 #include "../Triggers/TriggerFactory.h"
 #include "../Kits/KitManager.h"
@@ -62,11 +62,11 @@ namespace DrumKit
 		}
 	}
 
-	void Module::Start()
+	void Module::Start(RuntimeEventsCallback callback)
 	{
 
 		isPlay.store(true);
-		playThread = std::thread(&Module::Run, this);
+		playThread = std::thread(&Module::Run, this, callback);
 
 		// Set high priority to the thread
 //		int maxPriority = sched_get_priority_max(SCHED_FIFO);
@@ -410,7 +410,7 @@ namespace DrumKit
 	}
 
 
-	void Module::Run()
+	void Module::Run(RuntimeEventsCallback fireCallback)
 	{
 
 
@@ -457,6 +457,7 @@ namespace DrumKit
 						recorder.Push(TrigSound{instrumentPtr->GetId(), soundId, trigTime, volume});
 					}
 
+					fireCallback(soundId, volume);
 					mixer->PlaySound(soundId, volume);
 				}
 			}

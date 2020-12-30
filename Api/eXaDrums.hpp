@@ -15,9 +15,9 @@
 namespace eXaDrumsApi
 {
 
-	inline void eXaDrums::Start()
+	inline void eXaDrums::Start(Util::RuntimeEventsCallback callback)
 	{
-		Util::ErrorToException([&] { return this->Start_(); });
+		Util::ErrorToException([&] { return this->Start_(callback); });
 	}
 
 	inline void eXaDrums::Stop()

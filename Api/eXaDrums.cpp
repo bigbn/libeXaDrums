@@ -14,6 +14,7 @@
 #include "../Sound/Alsa/AlsaParameters.h"
 #include "../Sound/Mixer/Mixer.h"
 #include "../Util/Enums.h"
+#include "../Util/Misc.h"
 #include <systemd/sd-journal.h>
 
 #include <vector>
@@ -76,14 +77,14 @@ namespace eXaDrumsApi
 
 	// Module
 
-	error eXaDrums::Start_()
+	error eXaDrums::Start_(RuntimeEventsCallback externalHandler)
 	{
 		sd_journal_print(LOG_NOTICE, "Starting...");
 
 		try
 		{					
 			this->alsa->Start();
-			this->drumModule->Start();
+			this->drumModule->Start(externalHandler);
 		}
 		catch(const Exception&)
 		{

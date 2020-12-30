@@ -10,7 +10,7 @@
 
 #include "Version.h"
 #include "../Util/ErrorHandling.h"
-
+#include "../Util/Misc.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -23,7 +23,6 @@ namespace Sound { class Alsa; class Mixer;}
 
 namespace eXaDrumsApi
 {
-
 	class eXaDrums
 	{
 
@@ -39,7 +38,7 @@ namespace eXaDrumsApi
 		std::string GetDataLocation() const noexcept;
 
 		// Module
-		void Start();
+		void Start(Util::RuntimeEventsCallback callback);
 		void Stop();
 		void EnableRecording(bool enable);
 		void RecorderExport(const std::string& fileName);
@@ -100,7 +99,7 @@ namespace eXaDrumsApi
 
 	private:
 
-		Util::error Start_();
+		Util::error Start_(Util::RuntimeEventsCallback callback);
 		Util::error Stop_();
 		Util::error EnableRecording_(bool enable);
 		Util::error SelectKit_(int id);

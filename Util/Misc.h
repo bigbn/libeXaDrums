@@ -16,6 +16,7 @@
 
 namespace Util
 {
+	typedef void (*RuntimeEventsCallback)(int, float);
 
 	template <size_t I = 0, typename F, typename... T>
 	inline typename std::enable_if_t<I == sizeof...(T)> for_each_tuple(std::tuple<T...>&, F)
