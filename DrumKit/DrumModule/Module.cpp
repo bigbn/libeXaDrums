@@ -457,8 +457,8 @@ namespace DrumKit
 						recorder.Push(TrigSound{instrumentPtr->GetId(), soundId, trigTime, volume});
 					}
 
-					fireCallback(soundId, volume);
 					mixer->PlaySound(soundId, volume);
+					fireCallback(soundId, volume);
 				}
 			}
 		}
