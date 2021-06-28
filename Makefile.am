@@ -150,4 +150,6 @@ nobase_pkginclude_HEADERS = \
   Sound/InstrumentSoundType.h \
   Util/Enums.h \
   Util/ErrorHandling.h \
-  Util/Xml.h
+  Util/Xml.h \
+  Util/Misc.h
+
