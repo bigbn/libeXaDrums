@@ -21,6 +21,7 @@
 #include <cstring>
 
 using namespace Util;
+using namespace std;
 
 namespace Sound
 {
@@ -45,6 +46,7 @@ namespace Sound
 		}
 		else
 		{
+			cout << "Unable to open device!" << endl;
 			throw Exception(snd_strerror(err), error_type_error);
 		}
 
@@ -60,6 +62,7 @@ namespace Sound
 			}
 			else
 			{
+				cout << "Audio device not found!" << endl;
 				throw Exception("Audio device not found.", error_type_error); // Audio device not found
 			}
 		}
@@ -327,13 +330,13 @@ namespace Sound
 				err = snd_pcm_writei(params.handle, params.buffer.data(), frames);
 
 
-				if (err == -EAGAIN)
-				{
+				if (err == -EAGAIN) {
 					continue;
 				}
 
-				if (err < 0)
-				{
+				if (err < 0) {
+					cout << "Got error on pcm_write!" << endl;					
+					cout << err << endl;					
 					XrunRecovery(err);
 				}
 
@@ -351,23 +354,22 @@ namespace Sound
 	{
 
 		using namespace std::literals::chrono_literals;
+		printf("Write error: %s\n", snd_strerror(err));
 
-		if (err == -EPIPE)
-		{
+		if (err == -EPIPE) {
+			cout << "Got EPIPE error" << endl;
 			err = snd_pcm_prepare(params.handle);
-		}
-		else if (err == -ESTRPIPE)
-		{
-
-			while ((err = snd_pcm_resume(params.handle)) == -EAGAIN)
-			{
+		} else if (err == -ESTRPIPE) {
+			cout << "Got ESTRPIPE error" << endl;
+			while ((err = snd_pcm_resume(params.handle)) == -EAGAIN) {
 				std::this_thread::sleep_for(1ms);
 			}
 
-			if (err < 0)
-			{
+			if (err < 0) {
 				err = snd_pcm_prepare(params.handle);
 			}
+		} else if (err == -EBADFD) {
+			cout << "Got EBADFD error" << endl;
 		}
 
 		return;
