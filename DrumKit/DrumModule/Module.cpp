@@ -69,17 +69,14 @@ namespace DrumKit
 		playThread = std::thread(&Module::Run, this, callback);
 
 		// Set high priority to the thread
-//		int maxPriority = sched_get_priority_max(SCHED_FIFO);
-//
-//		if(maxPriority > 1)
-//		{
-//			maxPriority--;
-//		}
-//
-//		sched_param sch_params;
-//		sch_params.sched_priority = maxPriority;
-//
-//		pthread_setschedparam(playThread.native_handle(), SCHED_FIFO, &sch_params);
+		int maxPriority = sched_get_priority_max(SCHED_FIFO);
+
+		if(maxPriority > 1) maxPriority--;
+
+		sched_param sch_params;
+		sch_params.sched_priority = maxPriority;
+
+		pthread_setschedparam(playThread.native_handle(), SCHED_FIFO, &sch_params);
 
 		Util::SetThreadPriority(playThread.native_handle(), 99);
 
