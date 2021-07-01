@@ -329,20 +329,10 @@ namespace Sound
 
 				err = snd_pcm_writei(params.handle, params.buffer.data(), frames);
 
-
-				if (err == -EAGAIN) {
-					continue;
-				}
-
-				if (err < 0) {
-					cout << "Got error on pcm_write!" << endl;					
-					cout << err << endl;					
-					XrunRecovery(err);
-				}
+				if (err == -EAGAIN) continue;
+				if (err < 0) XrunRecovery(err);
 
 				frames -= err;
-
-
 			}
 
 		}
@@ -352,15 +342,11 @@ namespace Sound
 
 	void Alsa::XrunRecovery(int& err)
 	{
-
 		using namespace std::literals::chrono_literals;
-		printf("Write error: %s\n", snd_strerror(err));
 
 		if (err == -EPIPE) {
-			cout << "Got EPIPE error" << endl;
 			err = snd_pcm_prepare(params.handle);
 		} else if (err == -ESTRPIPE) {
-			cout << "Got ESTRPIPE error" << endl;
 			while ((err = snd_pcm_resume(params.handle)) == -EAGAIN) {
 				std::this_thread::sleep_for(1ms);
 			}
@@ -368,8 +354,6 @@ namespace Sound
 			if (err < 0) {
 				err = snd_pcm_prepare(params.handle);
 			}
-		} else if (err == -EBADFD) {
-			cout << "Got EBADFD error" << endl;
 		}
 
 		return;
